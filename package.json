@@ -4,10 +4,16 @@
   "private": true,
   "description": "Starter fullstack simples com Vite + Express (dev local)",
   "main": "server/server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "concurrently -k -n api,web -c cyan,magenta \"cross-env PORT=3001 nodemon server/server.js\" \"vite --open\"",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npx vite build",
+    "preview": "npx vite preview",
+    "vercel-build": "npx vite build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.75.0",

@@ -1,17 +1,69 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/",
-      "destination": "/index.html"
+      "src": "server/server.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/cachorros",
-      "destination": "/cachorros.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/server.js"
+    },
+    {
+      "src": "/cachorros",
+      "dest": "/pages/cachorros.html"
+    },
+    {
+      "src": "/gatos",
+      "dest": "/pages/gatos.html"
+    },
+    {
+      "src": "/passaros",
+      "dest": "/pages/passaros.html"
+    },
+    {
+      "src": "/peixes",
+      "dest": "/pages/peixes.html"
+    },
+    {
+      "src": "/jardim",
+      "dest": "/pages/jardim.html"
+    },
+    {
+      "src": "/promocoes",
+      "dest": "/pages/promocoes.html"
+    },
+    {
+      "src": "/areainterna",
+      "dest": "/pages/areainterna.html"
+    },
+    {
+      "src": "/contato",
+      "dest": "/pages/contato.html"
+    },
+    {
+      "src": "/sobre",
+      "dest": "/pages/sobre.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "functions": {
+    "server/server.js": {
+      "includeFiles": "server/**"
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",

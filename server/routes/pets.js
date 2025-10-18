@@ -1,7 +1,7 @@
-const express = require('express');
-const db = require('../db/mysql');
+import express from 'express';
+import db from '../db/mysql.js';
 
-module.exports = (app) => {
+export default (app) => {
   const router = express.Router();
 
   // GET /pets

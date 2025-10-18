@@ -1,33 +1,49 @@
-const pool = require('../server/db/mysql'); // Supondo que exportou o pool em db.js
-const path = require('path');
-const express = require('express');
-const fs = require('fs');
+import pool from './db/mysql.js';
+import path from 'path';
+import express from 'express';
+import fs from 'fs';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = process.env.PORT || 3001; // API na 3001; Vite na 3000
 
-const cors = require('cors');
+// Para ES modules, precisamos definir __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(cors());
 
 // Body parser
 app.use(express.json());
 
-// Auto-carregamento de rotas da pasta server/routes
-const routesDir = path.resolve(__dirname, 'routes');
-if (fs.existsSync(routesDir)) {
-  fs.readdirSync(routesDir)
-    .filter((file) => file.endsWith('.js'))
-    .forEach((file) => {
-      const registerRoutes = require(path.join(routesDir, file));
-      if (typeof registerRoutes === 'function') {
-        registerRoutes(app);
+// Função para inicializar o servidor
+async function startServer() {
+  // Auto-carregamento de rotas da pasta server/routes
+  const routesDir = path.resolve(__dirname, 'routes');
+  if (fs.existsSync(routesDir)) {
+    const routeFiles = fs.readdirSync(routesDir).filter((file) => file.endsWith('.js'));
+    
+    for (const file of routeFiles) {
+      try {
+        const routeModule = await import(path.join(routesDir, file));
+        const registerRoutes = routeModule.default;
+        if (typeof registerRoutes === 'function') {
+          registerRoutes(app);
+        }
+      } catch (error) {
+        console.error(`Erro ao carregar rota ${file}:`, error);
       }
-    });
+    }
+  }
+
+  app.listen(PORT, () => {
+    console.log(`API rodando em http://localhost:${PORT}`);
+  });
 }
 
-app.listen(PORT, () => {
-  console.log(`API rodando em http://localhost:${PORT}`);
-});
+// Iniciar o servidor
+startServer().catch(console.error);
 
 // Adicione essa rota no seu servidor
 app.get('/api/pets', (req, res) => {
