@@ -3,7 +3,7 @@
 Projeto base minimalista para rodar localmente aplicações fullstack com frontend no Vite e backend em Express.
 
 ## Requisitos
-- Node.js 18+ (LTS)
+- Node.js 18+ (LTS)aa
 
 ## Instalação e execução
 ```bash
